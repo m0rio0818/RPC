@@ -9,6 +9,8 @@ class RPC:
         self.param_tyes= param_types
         self.id = id
         
+    def substract(self, int1, int2):
+        return int1-int2
         
     def floor(self, x):
         return math.floor(x)
@@ -28,16 +30,19 @@ class RPC:
 class Server:
     def __init__(self) -> None:
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.server_addressess = "./rpc_server_address"
+        self.server_address = "./rpc_server_address"
         
     def start(self):
         try:
-            os.unlink(self.sock)
+            os.unlink(self.server_address)
         except FileNotFoundError:
             pass
+        print("Starting up on {}".format(self.server_address))
+        self.accept()
+        self.sendAndRecive()
         
     def accept(self):
-        self.sock.bind(self.server_addressess)
+        self.sock.bind(self.server_address)
         self.sock.listen(10)
         
     def sendAndRecive(self):
@@ -54,16 +59,13 @@ class Server:
                     if data:
                         response = "Processing " + data_str
                         connection.sendall(response.encode())
-                        
                     else:
                         print("no data from ", client_address)
                         break
             finally:
-                self.close()
+                print("Closing current connection")
+                connection.close()
 
-    def close(self):
-        print("Closing current socket")
-        self.sock.close()
         
 def main():
     server = Server()
