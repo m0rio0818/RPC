@@ -20,13 +20,16 @@ class Client:
             
     def sendMessage(self):
         try:
-            message = b"Message from client"
+            message = ""
+            with open ("./request.json", "r")  as f:
+                data = f.read()
+                message = bytes(data, "utf-8")
             self.sock.sendall(message)
             self.sock.settimeout(2)
             
             try:
                 while True:
-                    data = str(self.sock.recv(32))
+                    data = str(self.sock.recv(4096))
                     if data:
                         print("Server response :", data)
                     else:
@@ -41,7 +44,7 @@ class Client:
                    
                    
 def main():
-    client = Client();
+    client = Client()
     client.start()
     
 if __name__ == "__main__":

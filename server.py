@@ -1,5 +1,7 @@
 import socket
 import os
+import json
+import RPC
 
 class Server:
     def __init__(self) -> None:
@@ -27,12 +29,25 @@ class Server:
             try:
                 print("Connection from".format(client_address))
                 while True:
-                    data = connection.recv(32)
+                    data = connection.recv(4096)
                     data_str = data.decode("utf-8")
-                    print("Recived : " + data_str)
+                    # ここで受け取ったデータをjson => str
+                    
                     if data:
-                        response = "Processing : " + data_str
-                        connection.sendall(response.encode())
+                        try:
+                            strJson = json.loads(data_str)
+                            print("type",type(data_str), data_str)
+                            print("total: ",strJson, type(strJson))
+                            print("method: ",strJson["method"])
+                            print("params: ",strJson["params"])
+                            print("param_types: ",strJson["param_types"])
+                            print("id: ",strJson["id"])
+                            response = "Processing : " + data_str
+                            rpc = RPC.RPC(strJson["id"], strJson["method"], strJson["params"], strJson["param_types"])
+                            print(type(rpc.makeJson()), rpc.makeJson())
+                            connection.sendall(bytes(rpc.makeJson(), "utf-8"))
+                        except json.JSONDecodeError as e:
+                            print("JSON Decode Error :", e)
                     else:
                         print("No data from", client_address)
                         break
