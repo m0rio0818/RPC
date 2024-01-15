@@ -19,10 +19,10 @@ class RPC:
         return "".join(list(reversed(s)))
     
     def validAnagram(self, str1, str2):
-        return 
+        return set(self.params[0]) == set(self.params[1])
     
     def sort(self, strArr):
-        return
+        return sorted(strArr)
     
     def substract(self, x, y):
         print(x, y ," => ",x-y)
