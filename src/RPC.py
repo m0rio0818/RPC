@@ -18,7 +18,7 @@ class RPC:
     def reverse(self, s):
         return "".join(list(reversed(s)))
     
-    def validAnagram(self, str1, str2):
+    def validAnagram(self):
         return set(self.params[0]) == set(self.params[1])
     
     def sort(self, strArr):
@@ -44,7 +44,7 @@ class RPC:
             result = self.reverse(self.params[0])
             type = "string"
         elif (self.method == "validAnagram"):
-            result = self.validAnagram(self.params[0], self.params[1])
+            result = self.validAnagram()
             type = "boolean"
         elif (self.method == "sort"):
             result = self.sort(self.params[0])
